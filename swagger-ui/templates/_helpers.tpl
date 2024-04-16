@@ -49,14 +49,3 @@ Selector labels
 app.kubernetes.io/name: {{ include "swagger-ui.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "swagger-ui.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "swagger-ui.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
