@@ -49,3 +49,16 @@ Selector labels
 app.kubernetes.io/name: {{ include "swagger-ui.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+
+{{/*
+List of APIs
+*/}}
+{{- define "swagger-ui.apiURLs" -}}
+{{- $all := "" }}
+{{- range $path, $_ := .Files.Glob "api-specs/**.yaml" }}
+{{- $name := (split "." (split "/" $path)._1)._0  }}
+{{- $item := printf "{url:\"%s\",name:\"%s\"}" $path $name }}
+{{- printf "%s," $item}}
+{{- end }}
+{{- end }}

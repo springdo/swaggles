@@ -32,6 +32,11 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
+          env:
+          # - name: URL
+          #   value: api-specs/UnibanksAccountReachability.yaml
+          - name: URLS
+            value: '[{{ include "swagger-ui.apiURLs" . }}]'
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -46,14 +51,13 @@ spec:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
           volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-      {{- with .Values.volumes }}
+          - mountPath: /usr/share/nginx/html/api-specs
+            name: swagger-config
       volumes:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        - name: swagger-config
+          configMap:
+            name: {{ template "swagger-ui.fullname" . }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
