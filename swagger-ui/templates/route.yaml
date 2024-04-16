@@ -1,0 +1,19 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{ include "swagger-ui.fullname" . }}
+  labels:
+    {{- include "swagger-ui.labels" . | nindent 4 }}
+spec:
+  host: null
+  to:
+    kind: Service
+    name: {{ include "swagger-ui.fullname" . }}
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+  wildcardPolicy: None
+status:
+  ingress: []
